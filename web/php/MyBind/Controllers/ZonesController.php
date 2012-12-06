@@ -29,7 +29,15 @@ class ZonesController extends Controller {
   
   private function runIndex() {
     $ds = new \MyBind\DataStores\DnsZoneDataStore;
-    $data["zones"] = $ds->getAll();
+    
+    if (isset($_GET["showAll"])) {
+      $data["zones"] = $ds->getAll();
+    }
+    else {
+      $data["zones"] = $ds->getByUserId(1);
+    }
+    
+    $data["showAll"] = isset($_GET["showAll"]);
     $this->showView("zones/index", "Zones", $data);
   }
   
