@@ -9,7 +9,7 @@
 ?>
 
 <h2><?=$zone->name?></h2>
-<p><a href="../zones/">Zones</a></p>
+<p><a href="../../">Zones</a></p>
 
 <form>
   <table>
