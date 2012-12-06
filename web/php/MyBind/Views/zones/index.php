@@ -8,10 +8,10 @@
 
 ?>
 
-<table>
+<h2>Zones</h2>
+
+<ul>
 <?php foreach($zones as $zone): ?>
-  <tr>
-    <td><?=$zone->name?></td>
-  </tr>
+  <li><a href="edit/<?=$zone->id?>/"><?=$zone->name?></a></li>
 <?php endforeach ?>
-</table>
+</ul>

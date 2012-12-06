@@ -10,6 +10,7 @@ namespace MyBind\Controllers;
 
 require_once "Controller.php";
 require_once "php/MyBind/DataStores/DnsZoneDataStore.php";
+require_once "php/MyBind/DataStores/DnsRecordDataStore.php";
 
 class ZonesController extends Controller {
 
@@ -18,9 +19,30 @@ class ZonesController extends Controller {
   }
   
   public function run() {
+    if (preg_match("/^zones\/edit\/(\d+)\/$/", $this->app->path, $m)) {
+      $this->runEdit((int)$m[1]);
+    }
+    else {
+      $this->runIndex();
+    }
+  }
+  
+  private function runIndex() {
     $ds = new \MyBind\DataStores\DnsZoneDataStore;
     $data["zones"] = $ds->getAll();
     $this->showView("zones/index", "Zones", $data);
+  }
+  
+  private function runEdit($id) {
+    $zoneDS = new \MyBind\DataStores\DnsZoneDataStore;
+    $recordDS = new \MyBind\DataStores\DnsRecordDataStore;
+    
+    $zone = $zoneDS->getById($id);
+    $records = $recordDS->getByZoneId($id);
+    
+    $data["zone"] = $zone;
+    $data["records"] = $records;
+    $this->showView("zones/edit", $zone->name, $data);
   }
 }
 
