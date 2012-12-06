@@ -9,6 +9,7 @@
 namespace MyBind\Controllers;
 
 require_once "Controller.php";
+require_once "php/MyBind/DataStores/DnsZoneDataStore.php";
 
 class ZonesController extends Controller {
 
@@ -17,7 +18,9 @@ class ZonesController extends Controller {
   }
   
   public function run() {
-    $this->showView("zones/index", "Zones");
+    $ds = new \MyBind\DataStores\DnsZoneDataStore;
+    $data["zones"] = $ds->getAll();
+    $this->showView("zones/index", "Zones", $data);
   }
 }
 

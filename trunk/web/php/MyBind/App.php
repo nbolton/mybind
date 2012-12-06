@@ -12,8 +12,13 @@ require_once "Controllers/ControllerProvider.php";
 
 class App {
 
+  public static $instance;
+
   public function __construct() {
-    $this->controllerProvider = new Controllers\ControllerProvider;
+    $this->path = isset($_GET["path"]) ? $_GET["path"] : "";
+    $this->settings = parse_ini_file("settings.ini", true);
+    $this->controllerProvider = new Controllers\ControllerProvider($this);
+    self::$instance = $this;
   }
 
   public function run() {
