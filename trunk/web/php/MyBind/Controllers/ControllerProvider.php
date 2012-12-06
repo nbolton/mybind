@@ -25,6 +25,7 @@ class ControllerProvider {
   public function getForPath() {
     foreach ($this->controllers as $controller) {
       if (preg_match($controller->pathRegex, $this->app->path)) {
+        $controller->app = $this->app;
         return $controller;
       }
     }

@@ -12,6 +12,7 @@ abstract class Controller {
 
   function showView($page, $title="", $data=array()) {
     $title = "MyBind" . ($title == "" ? "" : " - $title");
+    $app = $this->app;
     foreach ($data as $k => $v) {
       $$k = $v;
     }

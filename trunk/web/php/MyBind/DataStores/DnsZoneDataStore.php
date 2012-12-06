@@ -16,6 +16,15 @@ class DnsZoneDataStore extends DataStore {
     $result = $this->query("select * from dnszone order by name");
     return $this->fromResult($result);
   }
+  
+  public function getById($id) {
+    $result = $this->query("select * from dnszone where id = %d", $id);
+    $zones = $this->fromResult($result);
+    if (count($zones) == 0) {
+      throw new \Exception("Zone does not exist: $id");
+    }
+    return $zones[0];
+  }
 }
 
 ?>

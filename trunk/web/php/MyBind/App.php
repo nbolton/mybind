@@ -33,6 +33,13 @@ class App {
     
     $controller->run();
   }
+  
+  public function getFilePath($filename) {
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $lastSlash = strrpos($scriptName, "/");
+    $root = substr($scriptName, 0, $lastSlash);
+    return "$root/$filename";
+  }
 }
 
 ?>
