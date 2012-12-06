@@ -20,7 +20,7 @@
       <th>Aux</th>
       <th>Data</th>
     </tr>
-    <?php foreach($records as $record): ?>
+    <?php foreach ($records as $record): ?>
     <tr>
       <td><input type="text" value="<?=$record->name?>" /></td>
       <td><input type="text" value="<?=$record->ttl?>" /></td>
