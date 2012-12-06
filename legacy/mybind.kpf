@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="fd368587-6044-4dda-9f39-82e87f4d7c43" kpf_version="4" name="mybind.kpf">
+<preference-set idref="fd368587-6044-4dda-9f39-82e87f4d7c43">
+  <boolean id="import_live">1</boolean>
+</preference-set>
+<preference-set idref="fd368587-6044-4dda-9f39-82e87f4d7c43/mybindweb/templates/help.html">
+  <string id="spellcheckLangID">en-US</string>
+</preference-set>
+</project>
