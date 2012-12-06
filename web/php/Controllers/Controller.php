@@ -10,7 +10,8 @@ namespace MyBind\Controllers;
 
 class Controller {
 
-  function showView($page, $title="MyBind", $data=array()) {
+  function showView($page, $title="", $data=array()) {
+    $title = "MyBind" . ($title == "" ? "" : " - $title");
     foreach ($data as $k => $v) {
       $$k = $v;
     }
