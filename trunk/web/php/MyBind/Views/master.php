@@ -16,6 +16,6 @@
   <body>
     <h1>MyBind</h1>
     <?php require_once "php/MyBind/Views/$page.php" ?>
-    <p>Copyright &copy; 2012 <a href="http://boltonsoftware.com">Bolton Software Ltd.</a></p> 
+    <p><a href="http://boltonsoftware.com">Bolton Software</a></p> 
   </body>
 </html>
