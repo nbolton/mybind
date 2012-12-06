@@ -14,16 +14,17 @@ require_once "InvalidPathException.php";
 
 class ControllerProvider {
 
-  public function __construct() {
+  public function __construct($app) {
+    $this->app = $app;
     $this->controllers = array();
+    
     $this->add(new IndexController);
     $this->add(new ZonesController);
   }
 
   public function getForPath() {
-    $path = isset($_GET["path"]) ? $_GET["path"] : "";
     foreach ($this->controllers as $controller) {
-      if (preg_match($controller->pathRegex, $path)) {
+      if (preg_match($controller->pathRegex, $this->app->path)) {
         return $controller;
       }
     }

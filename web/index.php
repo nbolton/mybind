@@ -6,7 +6,7 @@
 * All rights reserved.
 */
 
-require_once "php/App.php";
+require_once "php/MyBind/App.php";
 
 $app = new MyBind\App;
 $app->run();

@@ -13,6 +13,7 @@
     <title><?=$title?></title>
   </head>
   <body>
-    <?php require_once "php/Views/$page.php" ?>
+    <h1><?=$title?></h1>
+    <?php require_once "php/MyBind/Views/$page.php" ?>
   </body>
 </html>
