@@ -8,4 +8,4 @@
 
 ?>
 
-<p>Test</p>
+<p><a href="zones/">Zones</a></p>
