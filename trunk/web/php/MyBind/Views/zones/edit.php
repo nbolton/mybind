@@ -9,9 +9,9 @@
 ?>
 
 <h2><?=$zone->name?></h2>
+<p><a href="../zones/">Zones</a></p>
 
 <form>
-
   <table>
     <tr>
       <th>Name</th>
@@ -30,5 +30,4 @@
     </tr>
     <?php endforeach ?>
   </table>
-
 </form>
