@@ -22,7 +22,6 @@ class ControllerProvider {
 
   public function getForPath() {
     $path = isset($_GET["path"]) ? $_GET["path"] : "";
-    var_dump($path);
     foreach ($this->controllers as $controller) {
       if (preg_match($controller->pathRegex, $path)) {
         return $controller;

@@ -17,7 +17,7 @@ class ZonesController extends Controller {
   }
   
   public function run() {
-    $this->showView("zones/index");
+    $this->showView("zones/index", "Zones");
   }
 }
 
