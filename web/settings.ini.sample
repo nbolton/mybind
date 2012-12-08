@@ -6,4 +6,5 @@ name = mybind
 
 [error]
 handle = yes
-
+to = ...@...
+from = ...@...
