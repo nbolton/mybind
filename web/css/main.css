@@ -1,11 +1,23 @@
+html, body {
+  padding: 0px;
+  margin: 0px;
+}
+
 body {
   font-family: arial;
   font-size: 85%;
+  background-color: #293134;
+  color: #e0e2e4;
+}
+
+a {
+  color: #678cb1;
 }
 
 td, th {
   font-size: .8em;
   padding-left: 0px;
+  padding-right: .4em;
   text-align: left;
 }
 
@@ -14,5 +26,24 @@ ul {
 }
 
 input {
-  margin-left: 0px;
+  margin-left: -1px;
+  background-color: #3f4f54;
+  padding: 3px;
+  border: 1px solid #293134;
+  color: #e0e2e4;
+}
+
+input[type="text"] {
+  font-family: courier;
+  width: 100%;
+}
+
+div.header,
+div.content,
+div.footer {
+  padding: 1px 14px 1px 14px;
+}
+
+div.content {
+  background-color: #2f393c;
 }
