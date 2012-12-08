@@ -14,10 +14,21 @@ a {
   color: #678cb1;
 }
 
+form {
+  margin: 0px;
+  padding: 0px;
+}
+
+table {
+  border-spacing: 0px;
+  margin-bottom: .5em;
+}
+
 td, th {
   font-size: .8em;
   padding-left: 0px;
-  padding-right: .4em;
+  padding-right: .6em;
+  padding-bottom: .2em;
   text-align: left;
 }
 
@@ -29,13 +40,19 @@ input {
   margin-left: -1px;
   background-color: #3f4f54;
   padding: 3px;
-  border: 1px solid #293134;
+  border-color: #293134;
   color: #e0e2e4;
+  border-width: 1px;
 }
 
 input[type="text"] {
+  border-style: solid;
   font-family: courier;
   width: 100%;
+}
+
+input[type="submit"] {
+  padding: .3em .4em .3em .4em;
 }
 
 div.header,
