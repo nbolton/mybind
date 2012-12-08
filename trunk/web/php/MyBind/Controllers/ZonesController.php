@@ -22,8 +22,11 @@ class ZonesController extends Controller {
     if (preg_match("/^zones\/edit\/(\d+)\/$/", $this->app->path, $m)) {
       $this->runEdit((int)$m[1]);
     }
-    else {
+    else if (preg_match("/^zones\/$/", $this->app->path)) {
       $this->runIndex();
+    }
+    else {
+      $this->app->showPageNotFound();
     }
   }
   

@@ -63,13 +63,17 @@ class App {
     exit;
   }
   
+  public function showPageNotFound() {
+    header("HTTP/1.0 404 Not Found");
+    echo "<html><body><h1>404: Not Found</h1></body></html>";
+  }
+  
   private function getController() {
     try {
       return $this->controllerProvider->getForPath();
     }
     catch (Controllers\InvalidPathException $ex) {
-      header("HTTP/1.0 404 Not Found");
-      echo "<html><body><h1>404: Not Found</h1></body></html>";
+      $this->showPageNotFound();
       exit;
     }
   }
