@@ -48,6 +48,20 @@ class App {
     return "$root/$filename";
   }
   
+  public function handleError($code, $message, $file, $line) {
+    $this->showErrorPage();
+    switch ($code) {
+      case E_WARNING: $codeString = "E_WARNING"; break;
+      case E_NOTICE: $codeString = "E_NOTICE"; break;
+      case E_USER_ERROR: $codeString = "E_USER_ERROR"; break;
+      case E_USER_WARNING: $codeString = "E_USER_WARNING"; break;
+      case E_USER_NOTICE: $codeString = "E_USER_NOTICE"; break;
+      default: $codeString = $code; break;
+    }
+    $this->sendErrorReport("$file:$line\n$codeString - $message");
+    exit;
+  }
+  
   private function getController() {
     try {
       return $this->controllerProvider->getForPath();
@@ -61,20 +75,6 @@ class App {
   
   private function isErrorHandlingEnabled() {
     return $this->settings["error"]["handle"];
-  }
-  
-  public function handleError($code, $message, $file, $line) {
-    $this->showErrorPage();
-    switch ($code) {
-      case E_WARNING: $codeString = "E_WARNING"; break;
-      case E_NOTICE: $codeString = "E_NOTICE"; break;
-      case E_USER_ERROR: $codeString = "E_USER_ERROR"; break;
-      case E_USER_WARNING: $codeString = "E_USER_WARNING"; break;
-      case E_USER_NOTICE: $codeString = "E_USER_NOTICE"; break;
-      default: $codeString = $code; break;
-    }
-    $this->sendErrorReport("$file:$line\n$codeString - $message");
-    exit;
   }
   
   private function showErrorPage() {
