@@ -18,12 +18,13 @@ class App {
   public function __construct() {
     self::$instance = $this;
     
+    $this->settings = parse_ini_file("settings.ini", true);
+    
     if ($this->isErrorHandlingEnabled()) {
       set_error_handler(array($this, "handleError"));
     }
     
     $this->path = isset($_GET["path"]) ? $_GET["path"] : "";
-    $this->settings = parse_ini_file("settings.ini", true);
     $this->controllerProvider = new Controllers\ControllerProvider($this);
   }
 
