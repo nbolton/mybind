@@ -16,8 +16,19 @@
 <p><a href="./">Show mine</a></p>
 <?php endif ?>
 
-<ul>
-<?php foreach ($zones as $zone): ?>
-  <li><a href="edit/<?=$zone->id?>/"><?=$zone->name?></a></li>
-<?php endforeach ?>
-</ul>
+<table id="zones">
+  <tr>
+    <th>Zone</th>
+    <th>Status</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <?php foreach ($zones as $zone): ?>
+  <tr>
+    <td><?=$zone->name?></td>
+    <td>OK</td>
+    <td></td>
+    <td><a href="edit/<?=$zone->id?>/">Edit</a></td>
+  </tr>
+  <?php endforeach ?>
+</table>

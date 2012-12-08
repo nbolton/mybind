@@ -21,11 +21,19 @@ abstract class Controller {
   }
   
   protected function hasJavascriptFile() {
-    return "js/$this->view.js";
+    return file_exists("js/$this->view.js");
   }
   
   protected function getJavascriptFilePath() {
     return $this->app->getFilePath("js/$this->view.js");
+  }
+  
+  protected function hasStyleFile() {
+    return file_exists("css/$this->view.css");
+  }
+  
+  protected function getStyleFilePath() {
+    return $this->app->getFilePath("css/$this->view.css");
   }
 }
 
