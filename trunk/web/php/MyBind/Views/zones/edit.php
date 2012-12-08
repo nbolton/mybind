@@ -24,13 +24,13 @@
     <tr>
       <td style="width: 20%"><input type="text" value="<?=$record->name?>" /></td>
       <td style="width: 5%"><input type="text" value="<?=$record->ttl?>" /></td>
-      <td style="width: 5%"><input type="text" value="<?=$record->type?>" /></td>
+      <td style="width: 10%"><input type="text" value="<?=$record->type?>" /></td>
       <td style="width: 5%"><input type="text" value="<?=$record->aux?>" /></td>
       <td><input type="text" value="<?=$record->data?>" /></td>
     </tr>
     <?php endforeach ?>
   </table>
   
-  <p><a href="">Add record</a></p>
+  <p><a href="javascript:void(0)">Add record</a></p>
   
 </form>
