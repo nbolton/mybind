@@ -7,11 +7,13 @@
 */
 
 ?>
-
 <html>
   <head>
     <title><?=$title?></title>
     <link rel="stylesheet" type="text/css" href="<?=$app->getFilePath("css/main.css")?>" />
+    <?php if ($this->hasStyleFile()): ?>
+    <link rel="stylesheet" type="text/css" href="<?=$this->getStyleFilePath()?>" />
+    <?php endif ?>
     <script type="text/javascript" src="<?=$app->getFilePath("js/jquery-1.7.2.min.js")?>"></script>
     <script type="text/javascript" src="<?=$app->getFilePath("js/common.js")?>"></script>
     <?php if ($this->hasJavascriptFile()): ?>

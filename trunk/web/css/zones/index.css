@@ -1,0 +1,5 @@
+table#zones td,
+table#zones th {
+  padding-right: 1.5em;
+  padding-bottom: .4em;
+}
