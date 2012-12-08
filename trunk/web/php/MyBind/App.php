@@ -16,14 +16,15 @@ class App {
   public $errorShown = false;
 
   public function __construct() {
-    $this->path = isset($_GET["path"]) ? $_GET["path"] : "";
-    $this->settings = parse_ini_file("settings.ini", true);
-    $this->controllerProvider = new Controllers\ControllerProvider($this);
     self::$instance = $this;
     
     if ($this->isErrorHandlingEnabled()) {
       set_error_handler(array($this, "handleError"));
     }
+    
+    $this->path = isset($_GET["path"]) ? $_GET["path"] : "";
+    $this->settings = parse_ini_file("settings.ini", true);
+    $this->controllerProvider = new Controllers\ControllerProvider($this);
   }
 
   public function run() {
