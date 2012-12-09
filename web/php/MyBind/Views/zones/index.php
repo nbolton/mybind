@@ -10,6 +10,8 @@
 
 <h2>Zones</h2>
 
+<p><a href="new/">New zone</a></p>
+
 <?php if (!$showAll): ?>
 <p><a href="./?showAll">Show all</a></p>
 <?php else: ?>
@@ -26,9 +28,9 @@
   <?php foreach ($zones as $zone): ?>
   <tr>
     <td><?=$zone->name?></td>
-    <td><?=$zone->syncState?></td>
-    <?php if ($zone->syncMsg != "None"): ?>
-    <td><?=$zone->syncMsg?></td>
+    <td><?=$zone->syncStateFriendly()?></td>
+    <?php if ($zone->syncMessage != "None"): ?>
+    <td><?=$zone->syncMessage?></td>
     <?php endif ?>
     <td><a href="edit/<?=$zone->id?>/">Edit</a></td>
   </tr>
