@@ -35,6 +35,15 @@ abstract class Controller {
   protected function getStyleFilePath() {
     return $this->app->getFilePath("css/$this->view.css");
   }
+  
+  protected function isPost() {
+    return $_SERVER["REQUEST_METHOD"] == "POST";
+  }
+  
+  protected function applyFormValues($object) {
+    print_r($_POST);
+    exit;
+  }
 }
 
 ?>
