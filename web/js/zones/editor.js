@@ -9,7 +9,14 @@ $(function() {
   $("a.add").click(function() {
     var records = $("table#records");
     var newRow = records.find("tr:last").clone();
-    newRow.find("input").val("");
+    var rowId = $("table#records tr").length;
+    newRow.find("input").each(function() {
+      // clear field values
+      $(this).val("");
+      
+      // give this row a unique name
+      $(this).attr("name", $(this).attr("name").replace(/\d+/, rowId));
+    });
     newRow.hide();
     records.append(newRow);
     newRow.fadeIn();
