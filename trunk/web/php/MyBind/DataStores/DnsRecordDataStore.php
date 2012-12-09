@@ -9,6 +9,7 @@
 namespace MyBind\DataStores;
 
 require_once "DataStore.php";
+require_once "php/MyBind/Models/DnsRecord.php";
 
 class DnsRecordDataStore extends DataStore {
 
@@ -34,6 +35,8 @@ class DnsRecordDataStore extends DataStore {
       $record->ttl,
       $record->aux,
       $record->data);
+    
+    return $this->sql->insert_id;
   }
   
   public function update($record) {
@@ -50,7 +53,11 @@ class DnsRecordDataStore extends DataStore {
   }
   
   public function delete($id) {
-    $this->query("delete from mybindweb_dnsrecord where id = %d", $id);
+    $this->query("delete from mybindweb_dnsrecord where id = %d", (int)$id);
+  }
+  
+  public function newModel() {
+    return new \MyBind\Models\DnsRecord;
   }
 }
 
