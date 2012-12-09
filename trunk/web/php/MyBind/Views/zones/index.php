@@ -30,6 +30,11 @@
     <td><?=$zone->name?></td>
     <td><?=$zone->getStatus()?></td>
     <td><a href="edit/<?=$zone->id?>/">Edit</a></td>
+    <?php if ($zone->deleted): ?>
+    <td><a href="restore/<?=$zone->id?>/">Restore</a></td>
+    <?php else: ?>
+    <td><a href="delete/<?=$zone->id?>/">Delete</a></td>
+    <?php endif ?>
   </tr>
   <?php endforeach ?>
 </table>

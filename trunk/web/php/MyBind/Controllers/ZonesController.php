@@ -20,14 +20,20 @@ class ZonesController extends Controller {
   }
   
   public function run() {
-    if (preg_match("/^zones\/edit\/(\d+)\/$/", $this->app->path, $m)) {
-      $this->runEditor(EditorMode::Update, (int)$m[1]);
+    if (preg_match("/^zones\/$/", $this->app->path)) {
+      $this->runIndex();
     }
     else if (preg_match("/^zones\/new\//", $this->app->path, $m)) {
       $this->runEditor(EditorMode::Create);
     }
-    else if (preg_match("/^zones\/$/", $this->app->path)) {
-      $this->runIndex();
+    else if (preg_match("/^zones\/edit\/(\d+)\/$/", $this->app->path, $m)) {
+      $this->runEditor(EditorMode::Update, (int)$m[1]);
+    }
+    else if (preg_match("/^zones\/delete\/(\d+)\/$/", $this->app->path, $m)) {
+      $this->runDelete((int)$m[1]);
+    }
+    else if (preg_match("/^zones\/restore\/(\d+)\/$/", $this->app->path, $m)) {
+      $this->runRestore((int)$m[1]);
     }
     else {
       throw new InvalidPathException($this->app->path);
@@ -83,6 +89,20 @@ class ZonesController extends Controller {
     $data["defaultRecordAction"] = $defaultRecordAction;
     $data["mode"] = $mode;
     $this->showView("zones/editor", $title, $data);
+  }
+  
+  private function runDelete($id) {
+    // TODO: make sure user owns the zone.
+    $zoneDS = new \MyBind\DataStores\DnsZoneDataStore;
+    $zoneDS->deleteSoft($id);
+    header("Location: " . $this->app->getFilePath("zones/"));
+  }
+  
+  private function runRestore($id) {
+    // TODO: make sure user owns the zone.
+    $zoneDS = new \MyBind\DataStores\DnsZoneDataStore;
+    $zoneDS->restore($id);
+    header("Location: " . $this->app->getFilePath("zones/"));
   }
   
   private function handleEditorPost($zoneDS, $recordDS, $mode, $id) {
