@@ -39,9 +39,15 @@ updateRowCount = function() {
 
 initRowEvents = function() {
   $("a.delete").click(function() {
+    if ($("table#records tr:visible").length == 2) {
+      window.alert("There must be at least 1 record for the zone.");
+      return;
+    }
+    
     if (!window.confirm("Are you sure you want to delete this record?")) {
       return;
     }
+    
     var row = $(this).parent().parent();
     row.fadeOut();
     

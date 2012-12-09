@@ -125,7 +125,20 @@ class ZonesController extends Controller {
       
       case EditorMode::Update:
         $zone = $zoneDS->getById($id);
+        
+        if ($zone->syncState == \MyBind\Models\SyncState::SyncActive) {
+          throw new \Exception("Cannot update when sync is active.");
+        }
+        
+        if ($zone->deleted) {
+          throw new \Exception("Cannot update a deleted zone.");
+        }
+        
+        $oldName = $zone->name;
+        
         $this->setFormValues($zone);
+        
+        $zone->renamed = ($oldName != $zone->name);
         
         // if serial was last set today, make sure we increment the rev digits.
         $serialDate = date("Ymd");
@@ -135,7 +148,11 @@ class ZonesController extends Controller {
         }
         $zone->serial = $serialDate . str_pad($rev, 2, "0", STR_PAD_LEFT);
         
-        $zone->syncCommand = \MyBind\Models\SyncCommand::UpdatePending;
+        // only use update command if the zone has actually been created.
+        if ($zone->syncCommand != \MyBind\Models\SyncCommand::CreatePending) {
+          $zone->syncCommand = \MyBind\Models\SyncCommand::UpdatePending;
+        }
+        
         $zone->syncState = \MyBind\Models\SyncState::SyncPending;
         
         // TODO: make sure the user owns this zone.
