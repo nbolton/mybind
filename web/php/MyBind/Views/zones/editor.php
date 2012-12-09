@@ -8,8 +8,11 @@
 
 ?>
 
+<?php if (isset($zone->name)): ?>
 <h2><?=$zone->name?></h2>
-<p><a href="../../">Zones</a></p>
+<?php endif ?>
+
+<p><a href="<?=$app->getFilePath("zones/")?>">Zones</a></p>
 
 <form method="post">
   <table id="records" style="width: 100%">
@@ -36,8 +39,7 @@
     <?php endforeach ?>
   </table>
   
-  <input type="submit" value="Save" />
-  
   <p><a href="javascript:void(0)" class="add">Add record</a></p>
+  <p><input type="submit" value="Save" /></p>
   
 </form>

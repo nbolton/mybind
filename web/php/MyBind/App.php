@@ -30,8 +30,11 @@ class App {
 
   public function run() {
     try {
-      $controller = $this->getController();
+      $controller = $this->controllerProvider->getForPath();
       $controller->run();
+    }
+    catch (Controllers\InvalidPathException $ex) {
+      $this->showPageNotFound();
     }
     catch (\Exception $ex) {
       if ($this->isErrorHandlingEnabled()) {
@@ -66,16 +69,6 @@ class App {
   public function showPageNotFound() {
     header("HTTP/1.0 404 Not Found");
     echo "<html><body><h1>404: Not Found</h1></body></html>";
-  }
-  
-  private function getController() {
-    try {
-      return $this->controllerProvider->getForPath();
-    }
-    catch (Controllers\InvalidPathException $ex) {
-      $this->showPageNotFound();
-      exit;
-    }
   }
   
   private function isErrorHandlingEnabled() {
