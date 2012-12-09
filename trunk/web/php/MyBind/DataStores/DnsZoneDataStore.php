@@ -15,7 +15,7 @@ class DnsZoneDataStore extends DataStore {
 
   public function getAll() {
     $result = $this->query(
-      "select id, owner_id as ownerId, name, ".
+      "select id, name, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "order by name");
@@ -25,7 +25,7 @@ class DnsZoneDataStore extends DataStore {
   
   public function getByUserId($userId) {
     $result = $this->query(
-      "select id, owner_id as ownerId, name, ".
+      "select id, name, serial, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "where owner_id = %d ".
@@ -37,7 +37,7 @@ class DnsZoneDataStore extends DataStore {
   
   public function getById($id) {
     $result = $this->query(
-      "select id, name, default_ttl as defaultTtl, ".
+      "select id, name, default_ttl as defaultTtl, serial, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "where id = %d",
@@ -53,11 +53,12 @@ class DnsZoneDataStore extends DataStore {
   public function insert($zone, $ownerId) {
     $this->query(
       "insert into mybindweb_dnszone " .
-      "(owner_id, name, default_ttl, sync_cmd, sync_state) values ".
-      "(%d, %s, %s, %s, %s)",
+      "(owner_id, name, default_ttl, serial, sync_cmd, sync_state) values ".
+      "(%d, %s, %s, %s, %s, %s)",
       $ownerId,
       $zone->name,
       $zone->defaultTtl,
+      $zone->serial,
       $zone->syncCommand,
       $zone->syncState);
     
@@ -67,10 +68,11 @@ class DnsZoneDataStore extends DataStore {
   public function update($zone) {
     $this->query(
       "update mybindweb_dnszone set " .
-      "name = %s, default_ttl = %s, sync_cmd = %s, sync_state = %s ".
+      "name = %s, default_ttl = %s, serial = %s, sync_cmd = %s, sync_state = %s ".
       "where id = %d",
       $zone->name,
       $zone->defaultTtl,
+      $zone->serial,
       $zone->syncCommand,
       $zone->syncState,
       (int)$zone->id);
