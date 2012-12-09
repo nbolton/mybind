@@ -24,16 +24,19 @@
       <th>Data</th>
       <th></th>
     </tr>
+    <?php $i = 0 ?>
     <?php foreach ($records as $record): ?>
+    <?php $i++ ?>
     <tr>
-      <td style="width: 20%"><input type="text" name="name" value="<?=$record->name?>" /></td>
-      <td style="width: 5%"><input type="text" name="ttl" value="<?=$record->ttl?>" /></td>
-      <td style="width: 10%"><input type="text" name="type" value="<?=$record->type?>" class="type"/></td>
-      <td style="width: 5%"><input type="text" name="aux" value="<?=$record->aux?>" class="aux" /></td>
-      <td><input type="text" name="data" value="<?=$record->data?>" /></td>
+      <td style="width: 20%"><input type="text" name="r<?=$i?>[name]" value="<?=$record->name?>" /></td>
+      <td style="width: 5%"><input type="text" name="r<?=$i?>[ttl]" value="<?=$record->ttl?>" /></td>
+      <td style="width: 10%"><input type="text" name="r<?=$i?>[type]" value="<?=$record->type?>" class="type"/></td>
+      <td style="width: 5%"><input type="text" name="r<?=$i?>[aux]" value="<?=$record->aux?>" class="aux" /></td>
+      <td><input type="text" name="r<?=$i?>[data]" value="<?=$record->data?>" /></td>
       <td style="width: 1px">
         <a href="javascript:void(0)" class="delete">X</a>
-        <input type="hidden" name="delete" />
+        <input type="hidden" name="r<?=$i?>[delete]" />
+        <input type="hidden" name="r<?=$i?>[number]" value="<?=$i?>" />
       </td>
     </tr>
     <?php endforeach ?>
