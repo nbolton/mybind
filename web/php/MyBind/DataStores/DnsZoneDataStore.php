@@ -15,7 +15,7 @@ class DnsZoneDataStore extends DataStore {
 
   public function getAll() {
     $result = $this->query(
-      "select id, name, ".
+      "select id, name, deleted, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "order by name");
@@ -25,7 +25,7 @@ class DnsZoneDataStore extends DataStore {
   
   public function getByUserId($userId) {
     $result = $this->query(
-      "select id, name, serial, ".
+      "select id, name, serial, deleted, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "where owner_id = %d ".
@@ -79,7 +79,21 @@ class DnsZoneDataStore extends DataStore {
   }
   
   public function deleteSoft($id) {
-    $this->query("update mybindweb_dnszone set deleted = 1 where id = %d", $id);
+    $this->query(
+      "update mybindweb_dnszone ".
+      "set deleted = 1, sync_state = 'SP', sync_cmd = %s ".
+      "where id = %d",
+      \MyBind\Models\SyncCommand::DeletePending,
+      $id);
+  }
+  
+  public function restore($id) {
+    $this->query(
+      "update mybindweb_dnszone ".
+      "set deleted = 0, sync_state = 'SP', sync_cmd = %s ".
+      "where id = %d",
+      \MyBind\Models\SyncCommand::CreatePending,
+      $id);
   }
   
   public function newModel() {
