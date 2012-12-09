@@ -6,11 +6,13 @@
 
 $(function() {
   
-  $("a#add").click(function() {
+  $("a.add").click(function() {
     var records = $("table#records");
     var newRow = records.find("tr:last").clone();
     newRow.find("input").val("");
+    newRow.hide();
     records.append(newRow);
+    newRow.fadeIn();
   });
   
   $("a.delete").click(function() {
