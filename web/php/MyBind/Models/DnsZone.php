@@ -8,6 +8,20 @@
 
 namespace MyBind\Models;
 
+class SyncCommand {
+  const NothingToDo = "OK";
+  const UpdatePending = "UP";
+  const CreatePending = "CP";
+  const DeletePending = "DP";
+}
+
+class SyncState {
+  const UpToDate = "OK";
+  const SyncPending = "SP";
+  const SyncActive = "SA";
+  const SyncError = "SE";
+}
+
 class DnsZone {
   public $id;
   public $ownerId;
@@ -19,9 +33,10 @@ class DnsZone {
   
   public function getStatus() {
     switch ($this->syncState) {
-      case "OK": return "Up to date"; break;
-      case "SP": return "Synchronizing"; break;
-      case "ER": return "Error: " . $this->syncMessage; break;
+      case SyncState::UpToDate: return "Up to date"; break;
+      case SyncState::SyncPending: return "Sync pending"; break;
+      case SyncState::SyncActive: return "Sync active"; break;
+      case SyncState::SyncError: return "Error: " . $this->syncMessage; break;
     }
   }
 }

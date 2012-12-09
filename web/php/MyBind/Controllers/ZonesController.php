@@ -13,15 +13,6 @@ require_once "EditorMode.php";
 require_once "php/MyBind/DataStores/DnsZoneDataStore.php";
 require_once "php/MyBind/DataStores/DnsRecordDataStore.php";
 
-class SyncCommand {
-  const Update = "UP";
-  const Insert = "IN";
-}
-
-class SyncState {
-  const Pending = "SP";
-}
-
 class ZonesController extends Controller {
 
   public function __construct() {
@@ -69,9 +60,12 @@ class ZonesController extends Controller {
     switch ($mode) {
       case EditorMode::Create:
         $zone = new \MyBind\Models\DnsZone;
+        $zone->defaultTtl = "1h";
+        
         $record = new \MyBind\Models\DnsRecord;
         $records = array();
         array_push($records, $record);
+        
         $title = "New";
         $defaultRecordAction = "insert";
         break;
@@ -94,11 +88,14 @@ class ZonesController extends Controller {
   private function handleEditorPost($zoneDS, $recordDS, $mode, $id) {
     switch ($mode) {
       case EditorMode::Create:
-        $zone = new \MyBind\Models\DnsZone;
+        $zone = new \MyBind\Models\DnsZone;        
         $this->setFormValues($zone);
         
-        $zone->syncCommand = SyncCommand::Insert;
-        $zone->syncState = SyncState::Pending;
+        // use RFC style serial number (can make DNS troubleshooting a bit easier).
+        $zone->serial = date("Ymd00");
+        
+        $zone->syncCommand = \MyBind\Models\SyncCommand::CreatePending;
+        $zone->syncState = \MyBind\Models\SyncState::SyncPending;
         
         $id = $zoneDS->insert($zone, 1);
         
@@ -110,8 +107,16 @@ class ZonesController extends Controller {
         $zone = $zoneDS->getById($id);
         $this->setFormValues($zone);
         
-        $zone->syncCommand = SyncCommand::Update;
-        $zone->syncState = SyncState::Pending;
+        // if serial was last set today, make sure we increment the rev digits.
+        $serialDate = date("Ymd");
+        $rev = 0;
+        if (substr($zone->serial, 0, 8) == $serialDate) {
+          $rev = (int)substr($zone->serial, 8) + 1;
+        }
+        $zone->serial = $serialDate . str_pad($rev, 2, "0", STR_PAD_LEFT);
+        
+        $zone->syncCommand = \MyBind\Models\SyncCommand::UpdatePending;
+        $zone->syncState = \MyBind\Models\SyncState::SyncPending;
         
         // TODO: make sure the user owns this zone.
         $zoneDS->update($zone);
@@ -125,7 +130,6 @@ class ZonesController extends Controller {
   }
   
   private function setFormValues($zone) {
-    print_r($_POST);
     $zone->name = $_POST["zone"]["name"];
     $zone->defaultTtl = $_POST["zone"]["defaultTtl"];
   }
