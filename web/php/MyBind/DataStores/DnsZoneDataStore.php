@@ -68,11 +68,13 @@ class DnsZoneDataStore extends DataStore {
   public function update($zone) {
     $this->query(
       "update mybindweb_dnszone set " .
-      "name = %s, default_ttl = %s, serial = %s, sync_cmd = %s, sync_state = %s ".
+      "name = %s, default_ttl = %s, serial = %s, renamed = %d, ".
+      "sync_cmd = %s, sync_state = %s ".
       "where id = %d",
       $zone->name,
       $zone->defaultTtl,
       $zone->serial,
+      (int)$zone->renamed,
       $zone->syncCommand,
       $zone->syncState,
       (int)$zone->id);

@@ -30,6 +30,8 @@ class DnsZone {
   public $syncState;
   public $syncCommand;
   public $syncMessage;
+  public $deleted;
+  public $renamed;
   
   public function getStatus() {
     switch ($this->syncState) {
