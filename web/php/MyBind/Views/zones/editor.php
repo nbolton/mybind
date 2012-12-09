@@ -10,14 +10,31 @@ require_once "php/MyBind/Controllers/EditorMode.php";
 
 ?>
 
-<?php if ($mode == \MyBind\Controllers\EditorMode::Update): ?>
-<h2><?=$zone->name?></h2>
-<p><b>Status:</b> <?=$zone->syncStateFriendly()?></p>
-<?php endif ?>
+<h2><?=($mode == \MyBind\Controllers\EditorMode::Update) ? $zone->name : "New zone"?></h2>
 
 <p><a href="<?=$app->getFilePath("zones/")?>">Zones</a></p>
 
 <form method="post">
+  
+  <table id="zone">
+    <?php if ($mode == \MyBind\Controllers\EditorMode::Update): ?>
+    <tr>
+      <th>Status:</th>
+      <td><?=$zone->getStatus()?></td>
+    </tr>
+    <?php endif ?>
+    <tr>
+      <th>Zone Name:</th>
+      <td><input type="text" name="zone[name]" value="<?=$zone->name?>" /></td>
+    </tr>
+    <tr>
+      <th>Default TTL:</th>
+      <td><input type="text" name="zone[defaultTtl]" value="<?=$zone->defaultTtl?>" /></td>
+    </tr>
+  </table>
+
+  <h3>Records</h3>
+  
   <table id="records" style="width: 100%">
     <tr>
       <th>Name</th>

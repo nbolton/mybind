@@ -28,10 +28,7 @@
   <?php foreach ($zones as $zone): ?>
   <tr>
     <td><?=$zone->name?></td>
-    <td><?=$zone->syncStateFriendly()?></td>
-    <?php if ($zone->syncMessage != "None"): ?>
-    <td><?=$zone->syncMessage?></td>
-    <?php endif ?>
+    <td><?=$zone->getStatus()?></td>
     <td><a href="edit/<?=$zone->id?>/">Edit</a></td>
   </tr>
   <?php endforeach ?>

@@ -37,7 +37,7 @@ class DnsZoneDataStore extends DataStore {
   
   public function getById($id) {
     $result = $this->query(
-      "select id, owner_id as ownerId, name, ".
+      "select id, name, default_ttl as defaultTtl, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "where id = %d",
@@ -60,6 +60,8 @@ class DnsZoneDataStore extends DataStore {
       $zone->defaultTtl,
       $zone->syncCommand,
       $zone->syncState);
+    
+    return $this->sql->insert_id;
   }
   
   public function update($zone) {

@@ -15,6 +15,7 @@ require_once "php/MyBind/DataStores/DnsRecordDataStore.php";
 
 class SyncCommand {
   const Update = "UP";
+  const Insert = "IN";
 }
 
 class SyncState {
@@ -61,40 +62,14 @@ class ZonesController extends Controller {
     $recordDS = new \MyBind\DataStores\DnsRecordDataStore;
     
     if ($this->isPost()) {
-      
-      switch ($mode) {
-        case EditorMode::Create:
-          $zone = new \stdClass;
-          break;
-        
-        case EditorMode::Update:
-          $zone = $zoneDS->getById($id);
-          
-          $zone->syncCommand = SyncCommand::Update;
-          $zone->syncState = SyncState::Pending;
-          
-          // TODO: make sure the user owns this zone.
-          $zoneDS->update($zone);
-          
-          // TODO: make sure the user owns the records.
-          $this->saveRecordChanges($recordDS, $id);
-          break;
-      }
-      
-      header("Location: " . $this->app->getFilePath("zones/edit/$id/"));
+      $this->handleEditorPost($zoneDS, $recordDS, $mode, $id);
       return;
     }
     
     switch ($mode) {
       case EditorMode::Create:
-        $zone = new \stdClass;
-        $record = new \stdClass;
-        $record->id = null;
-        $record->name = null;
-        $record->ttl = null;
-        $record->type = null;
-        $record->aux = null;
-        $record->data = null;
+        $zone = new \MyBind\Models\DnsZone;
+        $record = new \MyBind\Models\DnsRecord;
         $records = array();
         array_push($records, $record);
         $title = "New";
@@ -114,6 +89,45 @@ class ZonesController extends Controller {
     $data["defaultRecordAction"] = $defaultRecordAction;
     $data["mode"] = $mode;
     $this->showView("zones/editor", $title, $data);
+  }
+  
+  private function handleEditorPost($zoneDS, $recordDS, $mode, $id) {
+    switch ($mode) {
+      case EditorMode::Create:
+        $zone = new \MyBind\Models\DnsZone;
+        $this->setFormValues($zone);
+        
+        $zone->syncCommand = SyncCommand::Insert;
+        $zone->syncState = SyncState::Pending;
+        
+        $id = $zoneDS->insert($zone, 1);
+        
+        // TODO: make sure only insert is allowed.
+        $this->saveRecordChanges($recordDS, $id);
+        break;
+      
+      case EditorMode::Update:
+        $zone = $zoneDS->getById($id);
+        $this->setFormValues($zone);
+        
+        $zone->syncCommand = SyncCommand::Update;
+        $zone->syncState = SyncState::Pending;
+        
+        // TODO: make sure the user owns this zone.
+        $zoneDS->update($zone);
+        
+        // TODO: make sure the user owns the records.
+        $this->saveRecordChanges($recordDS, $id);
+        break;
+    }
+    
+    header("Location: " . $this->app->getFilePath("zones/edit/$id/"));
+  }
+  
+  private function setFormValues($zone) {
+    print_r($_POST);
+    $zone->name = $_POST["zone"]["name"];
+    $zone->defaultTtl = $_POST["zone"]["defaultTtl"];
   }
   
   private function saveRecordChanges($recordDS, $zoneId) {
@@ -137,14 +151,16 @@ class ZonesController extends Controller {
           $recordDS->delete($record->id);
           break;
         
-        throw new \Exception("Invalid record save action: " . $record->action);
+        default:
+          throw new \Exception("Invalid record save action: " . $record->action);
       }
     }
   }
   
   private function getRecordObject($fields) {
-    $record = new \stdClass;
+    $record = new \MyBind\Models\DnsRecord;
     foreach ($fields as $k => $v) {
+      // only update fields that actually exist.
       $record->$k = $v;
     }
     return $record;

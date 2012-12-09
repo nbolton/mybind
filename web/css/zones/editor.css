@@ -1,0 +1,14 @@
+table#zone {
+  width: 40%;
+}
+
+table#zone th {
+  height: 2em;
+  width: 6em;
+  padding-right: 2em;
+  white-space: nowrap;
+}
+
+table#zone td {
+  min-width: 20em;
+}
