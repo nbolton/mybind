@@ -35,7 +35,6 @@ class Security {
   public function logout() {
     // php bug #19586 can stop this from working on some machines.
     unset($_SESSION[self::SESSION_KEY]);
-    $this->redirectFrom();
   }
   
   private function getUserId() {

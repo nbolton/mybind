@@ -9,10 +9,10 @@
 ?>
 
 <?php if ($app->security->isLoggedIn()): ?>
-<p><a href="zones/">Zones</a></p>
+<p>You're logged in. Use the links at the top to navigate.</p>
 <?php else: ?>
-<h2>Login</h2>
-<form action="login/" method="post">
+<h2>MyBind Login</h2>
+<form action="account/login/" method="post">
   <table style="width: 30%">
     <tr>
       <th>Email:</th>

@@ -11,22 +11,25 @@ namespace MyBind\Controllers;
 require_once "Controller.php";
 require_once "php/MyBind/DataStores/UserDataStore.php";
 
-class LoginController extends Controller {
+class AccountController extends Controller {
 
   public function __construct() {
-    $this->pathRegex = "/^login\/.*/";
+    $this->pathRegex = "/^account\/.*/";
   }
   
   public function run() {
-    if (preg_match("/^login\/$/", $this->app->path)) {
-      $this->runIndex();
+    if (preg_match("/^account\/login\/$/", $this->app->path)) {
+      $this->runLogin();
+    }
+    else if (preg_match("/^account\/logout\/$/", $this->app->path)) {
+      $this->runLogout();
     }
     else {
       throw new InvalidPathException($this->app->path);
     }
   }
   
-  private function runIndex() {
+  private function runLogin() {
     $ds = new \MyBind\DataStores\UserDataStore;
     $user = $ds->getByEmail($_POST["email"]);
     if ($user == null) {
@@ -43,6 +46,11 @@ class LoginController extends Controller {
     }
     
     $this->app->security->setUserId($user->id);
+    header("Location: " . $this->app->getFilePath(""));
+  }
+  
+  private function runLogout() {
+    $this->app->security->logout();
     header("Location: " . $this->app->getFilePath(""));
   }
 }
