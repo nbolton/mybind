@@ -18,7 +18,7 @@ class DnsZoneDataStore extends DataStore {
       "select id, name, deleted, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
-      "order by name");
+      "order by deleted, name");
     
     return $this->fromResult($result);
   }
@@ -29,7 +29,7 @@ class DnsZoneDataStore extends DataStore {
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "where owner_id = %d ".
-      "order by name",
+      "order by deleted, name",
       (int)$userId);
     
     return $this->fromResult($result);
