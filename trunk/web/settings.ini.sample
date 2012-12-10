@@ -8,3 +8,6 @@ name = mybind
 handle = yes
 to = ...@...
 from = ...@...
+
+[session]
+lifetime = 7200

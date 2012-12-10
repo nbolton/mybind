@@ -12,10 +12,12 @@
 
 <p><a href="new/">New zone</a></p>
 
+<?php if ($app->security->user->isAdmin): ?>
 <?php if (!$showAll): ?>
 <p><a href="./?showAll">Show all</a></p>
 <?php else: ?>
 <p><a href="./">Show mine</a></p>
+<?php endif ?>
 <?php endif ?>
 
 <table id="zones">
