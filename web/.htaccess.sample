@@ -1,7 +1,4 @@
 RewriteEngine on
-
-# change to the value of your spit subdir,
-# or comment out if spit is in your root.
 RewriteBase /mybind/
 
 RewriteCond %{REQUEST_FILENAME} !-f
