@@ -7,7 +7,15 @@ body {
   font-family: arial;
   font-size: 85%;
   background-color: #293134;
-  color: #e0e2e4;
+  color: #d9d9d9;
+}
+
+div.header h1 {
+  margin-bottom: .2em;
+}
+
+div.header p.tagline {
+  margin-top: .2em;
 }
 
 a {

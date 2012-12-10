@@ -39,21 +39,25 @@ class DnsRecordDataStore extends DataStore {
     return $this->sql->insert_id;
   }
   
-  public function update($record) {
+  public function update($record, $zoneId) {
     $this->query(
       "update mybindweb_dnsrecord set " .
       "name = %s, type = %s, ttl = %s, aux = %s, data = %s ".
-      "where id = %d",
+      "where id = %d and zone_id = %d",
       $record->name,
       $record->type,
       $record->ttl,
       $record->aux,
       $record->data,
-      (int)$record->id);
+      (int)$record->id,
+      (int)$zoneId);
   }
   
-  public function delete($id) {
-    $this->query("delete from mybindweb_dnsrecord where id = %d", (int)$id);
+  public function delete($id, $zoneId) {
+    $this->query(
+      "delete from mybindweb_dnsrecord ".
+      "where id = %d and zone_id = %d",
+      (int)$id);
   }
   
   public function newModel() {

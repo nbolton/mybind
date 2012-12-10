@@ -82,6 +82,10 @@ class ZonesController extends Controller {
       
       case EditorMode::Update:
         $zone = $zoneDS->getById($id);
+        if (!$this->hasAccess($zone)) {
+          throw new \Exception("Access denied.");
+        }
+        
         $records = $recordDS->getByZoneId($id);
         $title = $zone->name;
         $defaultRecordAction = "update";
@@ -99,7 +103,7 @@ class ZonesController extends Controller {
     $zoneDS = new \MyBind\DataStores\DnsZoneDataStore;
     
     $zone = $zoneDS->getById($id);
-    if ($zone->ownerId != $this->app->security->user->id) {
+    if (!$this->hasAccess($zone)) {
       throw new \Exception("Access denied.");
     }
     
@@ -111,7 +115,7 @@ class ZonesController extends Controller {
     $zoneDS = new \MyBind\DataStores\DnsZoneDataStore;
     
     $zone = $zoneDS->getById($id);
-    if ($zone->ownerId != $this->app->security->user->id) {
+    if (!$this->hasAccess($zone)) {
       throw new \Exception("Access denied.");
     }
     
@@ -122,11 +126,13 @@ class ZonesController extends Controller {
   private function handleEditorPost($zoneDS, $recordDS, $mode, $id) {
     switch ($mode) {
       case EditorMode::Create:
-        $zone = new \MyBind\Models\DnsZone;        
+        $zone = new \MyBind\Models\DnsZone;
         $this->setFormValues($zone);
         
         // use RFC style serial number (can make DNS troubleshooting a bit easier).
         $zone->serial = date("Ymd00");
+        
+        $zone->ownerId = $this->app->security->user->id;
         
         $zone->syncCommand = \MyBind\Models\SyncCommand::CreatePending;
         $zone->syncState = \MyBind\Models\SyncState::SyncPending;
@@ -139,7 +145,7 @@ class ZonesController extends Controller {
       
       case EditorMode::Update:
         $zone = $zoneDS->getById($id);
-        if ($zone->ownerId != $this->app->security->user->id) {
+        if (!$this->hasAccess($zone)) {
           throw new \Exception("Access denied.");
         }
         
@@ -189,24 +195,24 @@ class ZonesController extends Controller {
   }
   
   private function saveRecordChanges($recordDS, $zoneId) {
+    // zoneId is trusted here, so we're safe to use it
+    // for authorisation (used in the where clauses).
+    
     $recordCount = (int)$_POST["recordCount"];
     for ($i = 0; $i < $recordCount; $i++) {
       $record = $this->getRecordObject($_POST["r" . $i]);
       
       switch ($record->action) {
         case "insert":
-          // TODO: make sure user owns this zone
           $recordDS->insert($record, $zoneId);
           break;
         
         case "update":
-          // TODO: make sure user owns this zone/record
-          $recordDS->update($record);
+          $recordDS->update($record, $zoneId);
           break;
         
         case "delete":
-          // TODO: make sure user owns this zone/record
-          $recordDS->delete($record->id);
+          $recordDS->delete($record->id, $zoneId);
           break;
         
         default:
@@ -222,6 +228,11 @@ class ZonesController extends Controller {
       $record->$k = $v;
     }
     return $record;
+  }
+  
+  private function hasAccess($zone) {
+    $user = $this->app->security->user;
+    return ($zone->ownerId == $user->id) || $user->isAdmin;
   }
 }
 

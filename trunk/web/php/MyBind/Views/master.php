@@ -23,6 +23,16 @@
   <body>
     <div class="header">
       <h1>MyBind</h1>
+      <p class="tagline">If you know BIND, you know MyBind.</p>
+      <p>
+        <a href="<?=$app->getFilePath("")?>">Home</a>
+        | <a href="<?=$app->getFilePath("about/")?>">About</a>
+        | <a href="<?=$app->getFilePath("help/")?>">Help</a>
+        <?php if ($app->security->isLoggedIn()): ?>
+        | <a href="<?=$app->getFilePath("zones/")?>">Zones</a>
+        | <a href="<?=$app->getFilePath("account/logout/")?>">Logout</a>
+        <?php endif ?>
+      </p>
     </div>
     <div class="content">
       <?php require_once "php/MyBind/Views/$view.php" ?>

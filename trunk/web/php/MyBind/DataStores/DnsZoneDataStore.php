@@ -37,7 +37,8 @@ class DnsZoneDataStore extends DataStore {
   
   public function getById($id) {
     $result = $this->query(
-      "select id, name, default_ttl as defaultTtl, serial, ".
+      "select id, owner_id as ownerId, name, ".
+      "default_ttl as defaultTtl, serial, ".
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "where id = %d",
