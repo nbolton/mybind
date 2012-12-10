@@ -128,10 +128,7 @@ class ZonesController extends Controller {
       case EditorMode::Create:
         $zone = new \MyBind\Models\DnsZone;
         $this->setFormValues($zone);
-        
-        if (!$this->isValid($zone)) {
-          throw new \Exception("Zone is invalid.");
-        }
+        $this->validate($zone);
         
         // use RFC style serial number (can make DNS troubleshooting a bit easier).
         $zone->serial = date("Ymd00");
@@ -149,13 +146,10 @@ class ZonesController extends Controller {
       
       case EditorMode::Update:
         $zone = $zoneDS->getById($id);
+        $this->validate($zone);
         
         if (!$this->hasAccess($zone)) {
           throw new \Exception("Access denied.");
-        }
-        
-        if (!$this->isValid($zone)) {
-          throw new \Exception("Zone is invalid.");
         }
         
         if ($zone->syncState == \MyBind\Models\SyncState::SyncActive) {
@@ -244,11 +238,18 @@ class ZonesController extends Controller {
     return ($zone->ownerId == $user->id) || $user->isAdmin;
   }
   
-  private function isValid($zone) {
+  private function validate($zone) {
     if (preg_match("/mybind\.com/", $zone->name)) {
-      return false;
+      throw new \Exception("Zone hijacking found.");
     }
-    return true;
+    
+    if (preg_match("/[\:\/]/", $zone->name)) {
+      throw new \Exception("Invalid characters found.");
+    }
+    
+    if (preg_match("/\.$/", $zone->name)) {
+      throw new \Exception("Zone name can't end with period.");
+    }
   }
 }
 
