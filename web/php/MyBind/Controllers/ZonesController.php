@@ -129,6 +129,10 @@ class ZonesController extends Controller {
         $zone = new \MyBind\Models\DnsZone;
         $this->setFormValues($zone);
         
+        if (!$this->isValid($zone)) {
+          throw new \Exception("Zone is invalid.");
+        }
+        
         // use RFC style serial number (can make DNS troubleshooting a bit easier).
         $zone->serial = date("Ymd00");
         
@@ -145,8 +149,13 @@ class ZonesController extends Controller {
       
       case EditorMode::Update:
         $zone = $zoneDS->getById($id);
+        
         if (!$this->hasAccess($zone)) {
           throw new \Exception("Access denied.");
+        }
+        
+        if (!$this->isValid($zone)) {
+          throw new \Exception("Zone is invalid.");
         }
         
         if ($zone->syncState == \MyBind\Models\SyncState::SyncActive) {
@@ -233,6 +242,13 @@ class ZonesController extends Controller {
   private function hasAccess($zone) {
     $user = $this->app->security->user;
     return ($zone->ownerId == $user->id) || $user->isAdmin;
+  }
+  
+  private function isValid($zone) {
+    if (preg_match("/mybind\.com/", $zone->name)) {
+      return false;
+    }
+    return true;
   }
 }
 
