@@ -20,10 +20,14 @@ class ZonesController extends Controller {
   }
   
   public function run() {
+    if (!$this->app->security->isLoggedIn()) {
+      throw new \Exception("Access denied.");
+    }
+    
     if (preg_match("/^zones\/$/", $this->app->path)) {
       $this->runIndex();
     }
-    else if (preg_match("/^zones\/new\//", $this->app->path, $m)) {
+    else if (preg_match("/^zones\/new\//", $this->app->path)) {
       $this->runEditor(EditorMode::Create);
     }
     else if (preg_match("/^zones\/edit\/(\d+)\/$/", $this->app->path, $m)) {
@@ -44,7 +48,7 @@ class ZonesController extends Controller {
     $ds = new \MyBind\DataStores\DnsZoneDataStore;
     
     if (!isset($_GET["showAll"])) {
-      $data["zones"] = $ds->getByUserId(1);
+      $data["zones"] = $ds->getByUserId($this->app->security->user->id);
     }
     else {
       $data["zones"] = $ds->getAll();
@@ -92,15 +96,25 @@ class ZonesController extends Controller {
   }
   
   private function runDelete($id) {
-    // TODO: make sure user owns the zone.
     $zoneDS = new \MyBind\DataStores\DnsZoneDataStore;
+    
+    $zone = $zoneDS->getById($id);
+    if ($zone->ownerId != $this->app->security->user->id) {
+      throw new \Exception("Access denied.");
+    }
+    
     $zoneDS->deleteSoft($id);
     header("Location: " . $this->app->getFilePath("zones/"));
   }
   
   private function runRestore($id) {
-    // TODO: make sure user owns the zone.
     $zoneDS = new \MyBind\DataStores\DnsZoneDataStore;
+    
+    $zone = $zoneDS->getById($id);
+    if ($zone->ownerId != $this->app->security->user->id) {
+      throw new \Exception("Access denied.");
+    }
+    
     $zoneDS->restore($id);
     header("Location: " . $this->app->getFilePath("zones/"));
   }
@@ -117,7 +131,7 @@ class ZonesController extends Controller {
         $zone->syncCommand = \MyBind\Models\SyncCommand::CreatePending;
         $zone->syncState = \MyBind\Models\SyncState::SyncPending;
         
-        $id = $zoneDS->insert($zone, 1);
+        $id = $zoneDS->insert($zone, $this->app->security->user->id);
         
         // TODO: make sure only insert is allowed.
         $this->saveRecordChanges($recordDS, $id);
@@ -125,6 +139,9 @@ class ZonesController extends Controller {
       
       case EditorMode::Update:
         $zone = $zoneDS->getById($id);
+        if ($zone->ownerId != $this->app->security->user->id) {
+          throw new \Exception("Access denied.");
+        }
         
         if ($zone->syncState == \MyBind\Models\SyncState::SyncActive) {
           throw new \Exception("Cannot update when sync is active.");

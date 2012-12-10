@@ -30,7 +30,7 @@ class DnsZoneDataStore extends DataStore {
       "from mybindweb_dnszone ".
       "where owner_id = %d ".
       "order by name",
-      $userId);
+      (int)$userId);
     
     return $this->fromResult($result);
   }
@@ -41,7 +41,7 @@ class DnsZoneDataStore extends DataStore {
       "sync_state as syncState, sync_msg as syncMessage ".
       "from mybindweb_dnszone ".
       "where id = %d",
-      $id);
+      (int)$id);
     
     $zones = $this->fromResult($result);
     if (count($zones) == 0) {
@@ -55,7 +55,7 @@ class DnsZoneDataStore extends DataStore {
       "insert into mybindweb_dnszone " .
       "(owner_id, name, default_ttl, serial, sync_cmd, sync_state) values ".
       "(%d, %s, %s, %s, %s, %s)",
-      $ownerId,
+      (int)$ownerId,
       $zone->name,
       $zone->defaultTtl,
       $zone->serial,

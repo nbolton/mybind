@@ -10,6 +10,7 @@ namespace MyBind\Controllers;
 
 require_once "IndexController.php";
 require_once "ZonesController.php";
+require_once "LoginController.php";
 require_once "InvalidPathException.php";
 
 class ControllerProvider {
@@ -20,6 +21,7 @@ class ControllerProvider {
     
     $this->add(new IndexController);
     $this->add(new ZonesController);
+    $this->add(new LoginController);
   }
 
   public function getForPath() {
@@ -29,7 +31,7 @@ class ControllerProvider {
         return $controller;
       }
     }
-    throw new InvalidPathException($path);
+    throw new InvalidPathException($this->app->path);
   }
   
   private function add($controller) {

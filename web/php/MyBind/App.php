@@ -8,6 +8,8 @@
 
 namespace MyBind;
 
+require_once "Security.php";
+require_once "SessionManager.php";
 require_once "Controllers/ControllerProvider.php";
 
 class App {
@@ -26,10 +28,15 @@ class App {
     
     $this->path = isset($_GET["path"]) ? $_GET["path"] : "";
     $this->controllerProvider = new Controllers\ControllerProvider($this);
+    $this->security = new Security($this);
+    $this->sessionManager = new SessionManager($this->settings);
   }
 
   public function run() {
     try {
+      $this->sessionManager->start();
+      $this->security->run();
+      
       $controller = $this->controllerProvider->getForPath();
       $controller->run();
     }

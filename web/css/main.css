@@ -45,7 +45,8 @@ input {
   border-width: 1px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   border-style: solid;
   font-family: courier;
   width: 100%;
