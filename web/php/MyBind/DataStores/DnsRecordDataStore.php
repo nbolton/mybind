@@ -57,7 +57,8 @@ class DnsRecordDataStore extends DataStore {
     $this->query(
       "delete from mybindweb_dnsrecord ".
       "where id = %d and zone_id = %d",
-      (int)$id);
+      (int)$id,
+      (int)$zoneId);
   }
   
   public function newModel() {
