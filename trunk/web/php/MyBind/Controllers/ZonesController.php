@@ -10,6 +10,7 @@ namespace MyBind\Controllers;
 
 require_once "Controller.php";
 require_once "EditorMode.php";
+require_once "php/MyBind/SecurityException.php";
 require_once "php/MyBind/DataStores/DnsZoneDataStore.php";
 require_once "php/MyBind/DataStores/DnsRecordDataStore.php";
 
@@ -21,7 +22,7 @@ class ZonesController extends Controller {
   
   public function run() {
     if (!$this->app->security->isLoggedIn()) {
-      throw new \Exception("Access denied.");
+      throw new \MyBind\SecurityException("Cannot access zones, not logged in.");
     }
     
     if (preg_match("/^zones\/$/", $this->app->path)) {
@@ -83,7 +84,10 @@ class ZonesController extends Controller {
       case EditorMode::Update:
         $zone = $zoneDS->getById($id);
         if (!$this->hasAccess($zone)) {
-          throw new \Exception("Access denied.");
+          throw new \MyBind\SecurityException(sprintf(
+            "Edit access denied, user=%s zone=%s",
+            $this->app->security->user->email,
+            $zone->name));
         }
         
         $records = $recordDS->getByZoneId($id);
@@ -104,7 +108,10 @@ class ZonesController extends Controller {
     
     $zone = $zoneDS->getById($id);
     if (!$this->hasAccess($zone)) {
-      throw new \Exception("Access denied.");
+      throw new \MyBind\SecurityException(sprintf(
+        "Delete access denied, user=%s zone=%s",
+        $this->app->security->user->email,
+        $zone->name));
     }
     
     $zoneDS->deleteSoft($id);
@@ -116,7 +123,10 @@ class ZonesController extends Controller {
     
     $zone = $zoneDS->getById($id);
     if (!$this->hasAccess($zone)) {
-      throw new \Exception("Access denied.");
+      throw new \MyBind\SecurityException(sprintf(
+        "Restore access denied, user=%s zone=%s",
+        $this->app->security->user->email,
+        $zone->name));
     }
     
     $zoneDS->restore($id);
@@ -149,7 +159,10 @@ class ZonesController extends Controller {
         $this->validate($zone);
         
         if (!$this->hasAccess($zone)) {
-          throw new \Exception("Access denied.");
+          throw new \MyBind\SecurityException(sprintf(
+            "Update access denied, user=%s zone=%s",
+            $this->app->security->user->email,
+            $zone->name));
         }
         
         if ($zone->syncState == \MyBind\Models\SyncState::SyncActive) {
