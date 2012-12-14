@@ -6,7 +6,7 @@
 * All rights reserved.
 */
 
-namespace MyBind\DataStores;
+namespace MyBind;
 
 class SecurityException extends \Exception {
   public function __construct($message) {
