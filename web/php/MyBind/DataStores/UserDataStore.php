@@ -14,7 +14,7 @@ class UserDataStore extends DataStore {
 
   public function getById($id) {
     $result = $this->query(
-      "select id, is_superuser as isAdmin ".
+      "select id, username as email, is_superuser as isAdmin ".
       "from auth_user ".
       "where id = %d",
       (int)$id);
