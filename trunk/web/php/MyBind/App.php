@@ -103,7 +103,9 @@ class App {
   private function sendErrorReport($message) {
     $to = $this->settings["error"]["to"];
     $from = $this->settings["error"]["from"];
-    mail($to, "Error", $message, "From: $from");
+    $request = var_export($_REQUEST, true);
+    $server = var_export($_SERVER, true);
+    mail($to, "Error", "$message\n\n$request\n\n$server", "From: $from");
   }
 }
 
