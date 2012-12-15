@@ -30,6 +30,10 @@ class AccountController extends Controller {
   }
   
   private function runLogin() {
+    if (!isset($_POST["email"])) {
+      throw new \Exception("No email provided in post.");
+    }
+    
     $ds = new \MyBind\DataStores\UserDataStore;
     $user = $ds->getByEmail($_POST["email"]);
     if ($user == null) {
