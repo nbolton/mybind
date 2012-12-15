@@ -10,6 +10,7 @@ namespace MyBind;
 
 require_once "Security.php";
 require_once "SessionManager.php";
+require_once "SecurityException.php";
 require_once "Controllers/ControllerProvider.php";
 
 class App {
@@ -41,11 +42,14 @@ class App {
       $controller->run();
     }
     catch (Controllers\InvalidPathException $ex) {
-      $this->showPageNotFound();
+      $this->showErrorPage(404);
+    }
+    catch (SecurityException $ex) {
+      $this->showErrorPage(403);
     }
     catch (\Exception $ex) {
       if ($this->isErrorHandlingEnabled()) {
-        $this->showErrorPage();
+        $this->showErrorPage(500);
         $this->sendErrorReport($ex);
       }
       throw $ex;
@@ -60,7 +64,7 @@ class App {
   }
   
   public function handleError($code, $message, $file, $line) {
-    $this->showErrorPage();
+    $this->showErrorPage(500);
     switch ($code) {
       case E_WARNING: $codeString = "E_WARNING"; break;
       case E_NOTICE: $codeString = "E_NOTICE"; break;
@@ -73,21 +77,26 @@ class App {
     exit;
   }
   
-  public function showPageNotFound() {
-    header("HTTP/1.0 404 Not Found");
-    echo "<html><body><h1>404: Not Found</h1></body></html>";
-  }
-  
   private function isErrorHandlingEnabled() {
     return $this->settings["error"]["handle"];
   }
   
-  private function showErrorPage() {
+  private function showErrorPage($code) {
     if ($this->errorShown) {
       return;
     }
-    header("HTTP/1.0 500 Server Error");
-    echo "<html><body><h1>500: Server Error</h1></body></html>";
+    
+    switch ($code) {
+      case 403: $m = "Forbidden"; break;
+      case 404: $m = "Not Found"; break;
+      case 500: $m = "Server Error"; break;
+      default: $m = "Error"; break;
+    }
+    
+    $home = $this->getFilePath("");
+    
+    header("HTTP/1.0 $code $m");
+    echo "<html><body><h1>$code: $m</h1><p><a href=\"$home\">Home</a></p></body></html>";
     $this->errorShown = true;
   }
   
