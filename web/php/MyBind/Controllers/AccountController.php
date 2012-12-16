@@ -40,6 +40,10 @@ class AccountController extends Controller {
       throw new \Exception("Invalid email address.");
     }
     
+    if ($user->password == "") {
+      throw new \Exception("User has no password, email=" . $user->email);
+    }
+    
     $passParts = preg_split("/[$]/", $user->password);
     $salt = $passParts[1];
     $existingHash = $passParts[2];
