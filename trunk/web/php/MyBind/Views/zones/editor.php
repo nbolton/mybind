@@ -51,7 +51,7 @@ require_once "php/MyBind/Controllers/EditorMode.php";
       <td style="width: 5%"><input type="text" name="r<?=$i?>[ttl]" value="<?=$record->ttl?>" /></td>
       <td style="width: 10%"><input type="text" name="r<?=$i?>[type]" value="<?=$record->type?>" class="type"/></td>
       <td style="width: 5%"><input type="text" name="r<?=$i?>[aux]" value="<?=$record->aux?>" class="aux" /></td>
-      <td><input type="text" name="r<?=$i?>[data]" value="<?=$record->data?>" /></td>
+      <td><input type="text" name="r<?=$i?>[data]" value="<?=htmlentities($record->data)?>" /></td>
       <td style="width: 1px">
         <a href="javascript:void(0)" class="delete">X</a>
         <input type="hidden" name="r<?=$i?>[action]" class="action" value="<?=$defaultRecordAction?>" />
