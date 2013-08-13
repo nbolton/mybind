@@ -252,10 +252,6 @@ class ZonesController extends Controller {
   }
   
   private function validate($zone) {
-    if (preg_match("/mybind\.com/", $zone->name)) {
-      throw new \Exception("Zone hijacking found.");
-    }
-    
     if (preg_match("/[\:\/]/", $zone->name)) {
       throw new \Exception("Invalid characters found.");
     }
