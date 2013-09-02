@@ -30,31 +30,36 @@ class AccountController extends Controller {
   }
   
   private function runLogin() {
-    if (!isset($_POST["email"])) {
-      throw new \Exception("No email provided in post.");
+    try {
+      if (!isset($_POST["email"]) || ($_POST["email"] == "")) {
+        throw new \Exception("No email address provided.");
+      }
+      
+      $ds = new \MyBind\DataStores\UserDataStore;
+      $user = $ds->getByEmail($_POST["email"]);
+      if ($user == null) {
+        throw new \Exception("Invalid email address.");
+      }
+      
+      if ($user->password == "") {
+        throw new \Exception("User has no password, email=" . $user->email);
+      }
+      
+      $passParts = preg_split("/[$]/", $user->password);
+      $salt = $passParts[1];
+      $existingHash = $passParts[2];
+      $attemptHash = sha1($salt . $_POST["password"]);
+      
+      if ($attemptHash != $existingHash) {
+        throw new \Exception("Invalid password.");
+      }
+      
+      $this->app->security->setUserId($user->id);
+      header("Location: " . $this->app->getFilePath(""));
     }
-    
-    $ds = new \MyBind\DataStores\UserDataStore;
-    $user = $ds->getByEmail($_POST["email"]);
-    if ($user == null) {
-      throw new \Exception("Invalid email address.");
+    catch (\Exception $ex) {
+      die($ex->getMessage());
     }
-    
-    if ($user->password == "") {
-      throw new \Exception("User has no password, email=" . $user->email);
-    }
-    
-    $passParts = preg_split("/[$]/", $user->password);
-    $salt = $passParts[1];
-    $existingHash = $passParts[2];
-    $attemptHash = sha1($salt . $_POST["password"]);
-    
-    if ($attemptHash != $existingHash) {
-      throw new \Exception("Invalid password.");
-    }
-    
-    $this->app->security->setUserId($user->id);
-    header("Location: " . $this->app->getFilePath(""));
   }
   
   private function runLogout() {
